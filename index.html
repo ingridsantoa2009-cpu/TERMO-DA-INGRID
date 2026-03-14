@@ -48,22 +48,47 @@ background:#3a3a3c;
 border:none;
 }
 
-input{
-margin-top:20px;
-font-size:20px;
-padding:10px;
-text-transform:uppercase;
+#keyboard{
+margin-top:30px;
 }
 
-button{
-font-size:18px;
-padding:10px 20px;
-margin-top:10px;
+.keyrow{
+display:flex;
+justify-content:center;
+margin-bottom:8px;
+}
+
+.key{
+background:white;
+color:black;
+border:none;
+margin:2px;
+padding:12px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+border-radius:4px;
+}
+
+.key.enter{
+background:#6aaa64;
+color:white;
+}
+
+.key.delete{
+background:#6aaa64;
+color:white;
 }
 
 #message{
 margin-top:20px;
 font-size:22px;
+}
+
+button{
+font-size:16px;
+padding:10px 20px;
+margin-top:10px;
 }
 
 </style>
@@ -76,10 +101,46 @@ font-size:22px;
 
 <div id="board"></div>
 
-<br>
+<div id="keyboard">
 
-<input id="guess" maxlength="5">
-<button onclick="check()">Enviar</button>
+<div class="keyrow">
+<button class="key" onclick="press('Q')">Q</button>
+<button class="key" onclick="press('W')">W</button>
+<button class="key" onclick="press('E')">E</button>
+<button class="key" onclick="press('R')">R</button>
+<button class="key" onclick="press('T')">T</button>
+<button class="key" onclick="press('Y')">Y</button>
+<button class="key" onclick="press('U')">U</button>
+<button class="key" onclick="press('I')">I</button>
+<button class="key" onclick="press('O')">O</button>
+<button class="key" onclick="press('P')">P</button>
+</div>
+
+<div class="keyrow">
+<button class="key" onclick="press('A')">A</button>
+<button class="key" onclick="press('S')">S</button>
+<button class="key" onclick="press('D')">D</button>
+<button class="key" onclick="press('F')">F</button>
+<button class="key" onclick="press('G')">G</button>
+<button class="key" onclick="press('H')">H</button>
+<button class="key" onclick="press('J')">J</button>
+<button class="key" onclick="press('K')">K</button>
+<button class="key" onclick="press('L')">L</button>
+</div>
+
+<div class="keyrow">
+<button class="key enter" onclick="check()">ENTER</button>
+<button class="key" onclick="press('Z')">Z</button>
+<button class="key" onclick="press('X')">X</button>
+<button class="key" onclick="press('C')">C</button>
+<button class="key" onclick="press('V')">V</button>
+<button class="key" onclick="press('B')">B</button>
+<button class="key" onclick="press('N')">N</button>
+<button class="key" onclick="press('M')">M</button>
+<button class="key delete" onclick="del()">⌫</button>
+</div>
+
+</div>
 
 <div id="message"></div>
 
@@ -87,9 +148,10 @@ font-size:22px;
 
 <script>
 
-let palavra="TETEO"
+let palavra="AMORZ"
 let tentativaAtual=0
 let maxTentativas=6
+let tentativa=""
 
 const board=document.getElementById("board")
 
@@ -99,9 +161,35 @@ tile.classList.add("tile")
 board.appendChild(tile)
 }
 
-function check(){
+function press(letra){
 
-let tentativa=document.getElementById("guess").value.toUpperCase()
+if(tentativa.length<5){
+tentativa+=letra
+updateBoard()
+}
+
+}
+
+function del(){
+
+tentativa=tentativa.slice(0,-1)
+updateBoard()
+
+}
+
+function updateBoard(){
+
+for(let i=0;i<5;i++){
+
+let tile=board.children[tentativaAtual*5+i]
+
+tile.textContent=tentativa[i]||""
+
+}
+
+}
+
+function check(){
 
 if(tentativa.length!=5){
 alert("Digite 5 letras")
@@ -111,7 +199,6 @@ return
 for(let i=0;i<5;i++){
 
 let tile=board.children[tentativaAtual*5+i]
-tile.textContent=tentativa[i]
 
 if(tentativa[i]==palavra[i]){
 tile.classList.add("correct")
@@ -133,6 +220,7 @@ return
 }
 
 tentativaAtual++
+tentativa=""
 
 if(tentativaAtual==maxTentativas){
 document.getElementById("message").innerHTML="❌ Você perdeu! A palavra era "+palavra
