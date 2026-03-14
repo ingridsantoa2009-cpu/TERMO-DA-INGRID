@@ -58,7 +58,12 @@ text-transform:uppercase;
 button{
 font-size:18px;
 padding:10px 20px;
-margin-left:10px;
+margin-top:10px;
+}
+
+#message{
+margin-top:20px;
+font-size:22px;
 }
 
 </style>
@@ -76,10 +81,15 @@ margin-left:10px;
 <input id="guess" maxlength="5">
 <button onclick="check()">Enviar</button>
 
+<div id="message"></div>
+
+<button onclick="restart()">Tentar de novo</button>
+
 <script>
 
-let palavra="AMORZ"
+let palavra="TETEO"
 let tentativaAtual=0
+let maxTentativas=6
 
 const board=document.getElementById("board")
 
@@ -117,12 +127,21 @@ tile.classList.add("absent")
 
 }
 
-tentativaAtual++
-
 if(tentativa==palavra){
-alert("🎉 Você acertou!")
+document.getElementById("message").innerHTML="🎉 Você acertou!"
+return
 }
 
+tentativaAtual++
+
+if(tentativaAtual==maxTentativas){
+document.getElementById("message").innerHTML="❌ Você perdeu! A palavra era "+palavra
+}
+
+}
+
+function restart(){
+location.reload()
 }
 
 </script>
