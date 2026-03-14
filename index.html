@@ -85,10 +85,47 @@ margin-top:20px;
 font-size:22px;
 }
 
-button{
-font-size:16px;
-padding:10px 20px;
-margin-top:10px;
+.retry{
+background:#6aaa64;
+border:none;
+color:white;
+font-size:22px;
+padding:15px 30px;
+border-radius:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.retry:hover{
+transform:scale(1.1);
+background:#5a9c57;
+}
+
+#victoryScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#121213;
+display:none;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:10;
+}
+
+#victoryScreen h1{
+font-size:70px;
+color:#6aaa64;
+margin-bottom:20px;
+}
+
+#confetti{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
 }
 
 </style>
@@ -144,7 +181,17 @@ margin-top:10px;
 
 <div id="message"></div>
 
-<button onclick="restart()">Tentar de novo</button>
+<div id="victoryScreen">
+<h1>🎉 VOCÊ GANHOU! 🎉</h1>
+<p>Parabéns! Você descobriu a palavra.</p>
+<button onclick="restart()" class="retry">Jogar novamente</button>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<audio id="winSound">
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2c6f0c2c62.mp3">
+</audio>
 
 <script>
 
@@ -215,7 +262,11 @@ tile.classList.add("absent")
 }
 
 if(tentativa==palavra){
-document.getElementById("message").innerHTML="🎉 Você acertou!"
+
+document.getElementById("victoryScreen").style.display="flex"
+document.getElementById("winSound").play()
+startConfetti()
+
 return
 }
 
@@ -230,6 +281,46 @@ document.getElementById("message").innerHTML="❌ Você perdeu! A palavra era "+
 
 function restart(){
 location.reload()
+}
+
+const canvas=document.getElementById("confetti")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let pieces=[]
+
+for(let i=0;i<120;i++){
+pieces.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*6+4,
+speed:Math.random()*3+2
+})
+}
+
+function startConfetti(){
+
+setInterval(()=>{
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+pieces.forEach(p=>{
+
+ctx.fillStyle="#6aaa64"
+ctx.fillRect(p.x,p.y,p.size,p.size)
+
+p.y+=p.speed
+
+if(p.y>canvas.height){
+p.y=0
+}
+
+})
+
+},20)
+
 }
 
 </script>
