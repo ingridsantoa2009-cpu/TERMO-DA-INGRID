@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Meu Termo</title>
 
 <style>
+
 body{
 font-family:Arial;
 text-align:center;
+background:#121213;
+color:white;
+}
+
+#board{
+display:grid;
+grid-template-columns:repeat(5,60px);
+gap:5px;
+justify-content:center;
+margin-top:30px;
+}
+
+.tile{
+width:60px;
+height:60px;
+border:2px solid #3a3a3c;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+font-weight:bold;
+text-transform:uppercase;
+}
+
+.correct{
+background:#6aaa64;
+border:none;
+}
+
+.present{
+background:#c9b458;
+border:none;
+}
+
+.absent{
+background:#3a3a3c;
+border:none;
 }
 
 input{
+margin-top:20px;
 font-size:20px;
 padding:10px;
+text-transform:uppercase;
 }
 
 button{
-font-size:20px;
-padding:10px;
+font-size:18px;
+padding:10px 20px;
+margin-left:10px;
 }
 
 </style>
@@ -25,29 +67,60 @@ padding:10px;
 
 <body>
 
-<h1>Jogo de Palavra</h1>
+<h1>Meu Termo</h1>
 
-<p>Tente descobrir a palavra!</p>
+<div id="board"></div>
+
+<br>
 
 <input id="guess" maxlength="5">
-
 <button onclick="check()">Enviar</button>
-
-<p id="result"></p>
 
 <script>
 
-let palavra="amor"
+let palavra="AMORZ"
+let tentativaAtual=0
+
+const board=document.getElementById("board")
+
+for(let i=0;i<30;i++){
+let tile=document.createElement("div")
+tile.classList.add("tile")
+board.appendChild(tile)
+}
 
 function check(){
 
-let tentativa=document.getElementById("guess").value.toLowerCase()
+let tentativa=document.getElementById("guess").value.toUpperCase()
+
+if(tentativa.length!=5){
+alert("Digite 5 letras")
+return
+}
+
+for(let i=0;i<5;i++){
+
+let tile=board.children[tentativaAtual*5+i]
+tile.textContent=tentativa[i]
+
+if(tentativa[i]==palavra[i]){
+tile.classList.add("correct")
+}
+
+else if(palavra.includes(tentativa[i])){
+tile.classList.add("present")
+}
+
+else{
+tile.classList.add("absent")
+}
+
+}
+
+tentativaAtual++
 
 if(tentativa==palavra){
-document.getElementById("result").innerHTML="🎉 Você acertou!"
-}
-else{
-document.getElementById("result").innerHTML="❌ Tente novamente"
+alert("🎉 Você acertou!")
 }
 
 }
