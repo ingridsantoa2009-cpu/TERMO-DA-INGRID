@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TERMO DA INGRID</title>
+<title>Meu Termo</title>
 
 <style>
 
@@ -190,20 +190,11 @@ pointer-events:none;
 <body>
 
 <div id="startScreen">
-
-<h1>Está preparado para o desafio?</h1>
-
-<p class="instructions">
-Esse termo é de alguém especial para alguém especial e ele agora tem tempo!<br><br>
-Você terá <b>2 minutos</b> para acertar a palavra.<br>
-Boa sorte!
-</p>
-
+<h1>Está preparada para o desafio?</h1>
 <button class="startBtn" onclick="startGame()">START</button>
-
 </div>
 
-<h1>TERMO DA INGRID</h1>
+<h1>Meu Termo</h1>
 
 <div id="timer">02:00</div>
 
@@ -269,11 +260,11 @@ Boa sorte!
 
 <script>
 
-let palavra="TERMO"
+let palavra="AMORZ"
 
 let tentativaAtual=0
 let tentativa=""
-let maxTentativas=5
+let maxTentativas=6
 
 let tempo=120
 let timerInterval
@@ -366,8 +357,7 @@ tile.classList.add("present")
 
 else{
 tile.classList.add("absent")
-else{
-tile.classList.add("absent")
+document.getElementById("key"+tentativa[i]).classList.add("wrong")
 }
 
 }
