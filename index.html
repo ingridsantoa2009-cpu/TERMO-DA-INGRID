@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>TERMO DA INGRID</title>
+<title>Meu Termo</title>
 
 <style>
 
@@ -125,23 +125,29 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.9);
+background:#121213;
 display:none;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 text-align:center;
+z-index:1000;
 }
 
 .overlay h1{
-font-size:50px;
+font-size:60px;
+margin-bottom:20px;
 }
 
 .retry{
-padding:15px 25px;
-font-size:20px;
-margin-top:20px;
+padding:18px 28px;
+font-size:22px;
 cursor:pointer;
+background:#6aaa64;
+border:none;
+color:white;
+font-weight:bold;
+border-radius:6px;
 }
 
 @media(max-width:600px){
@@ -170,7 +176,7 @@ font-size:14px;
 
 <div id="startScreen">
 
-<h1>Está preparado para o desafio?</h1>
+<h1>Está preparada para o desafio?</h1>
 
 <p class="instructions">
 Esse termo é de alguém especial para alguém especial e ele agora tem tempo!<br><br>
@@ -182,7 +188,7 @@ Boa sorte!
 
 </div>
 
-<h1>TERMO DA INGRID</h1>
+<h1>Meu Termo</h1>
 <div id="timer">01:30</div>
 
 <div id="board"></div>
@@ -196,19 +202,19 @@ Boa sorte!
 </div>
 
 <div id="victory" class="overlay">
-<h1>🎉 VOCÊ GANHOU 🎉</h1>
+<h1>VOCÊ GANHOU 🎉</h1>
 <button class="retry" onclick="location.reload()">Tentar novamente</button>
 </div>
 
 <div id="defeat" class="overlay">
-<h1>❌ VOCÊ PERDEU ❌</h1>
-<p>A palavra era: <span id="loseWord"></span></p>
+<h1>VOCÊ PERDEU</h1>
+<p style="font-size:24px;">A palavra era: <b><span id="loseWord"></span></b></p>
 <button class="retry" onclick="location.reload()">Tentar novamente</button>
 </div>
 
 <script>
 
-let palavra="TESTE".toUpperCase()
+let palavra="AMOR".toUpperCase()
 
 let board=document.getElementById("board")
 
@@ -221,15 +227,11 @@ let timerInterval
 let timerStarted=false
 
 function startGame(){
-
 document.getElementById("startScreen").style.display="none"
-
 }
 
 function startTimer(){
-
 timerInterval=setInterval(updateTimer,1000)
-
 }
 
 function updateTimer(){
@@ -336,7 +338,7 @@ function check(){
 
 if(currentCol<5) return
 
-let tentativa="5"
+let tentativa=""
 
 for(let i=0;i<5;i++){
 tentativa+=grid[currentRow][i].textContent
@@ -347,17 +349,13 @@ for(let i=0;i<5;i++){
 let tile=grid[currentRow][i]
 
 if(tentativa[i]===palavra[i]){
-
 tile.classList.add("correct")
-
-}else if(palavra.includes(tentativa[i])){
-
+}
+else if(palavra.includes(tentativa[i])){
 tile.classList.add("present")
-
-}else{
-
+}
+else{
 tile.classList.add("absent")
-
 }
 
 }
@@ -386,7 +384,7 @@ if(currentRow===5){
 clearInterval(timerInterval)
 
 for(let i=0;i<5;i++){
-grid[5][i].style.background="#ff4d4d"
+grid[4][i].style.background="#ff4d4d"
 }
 
 loseGame()
@@ -404,7 +402,7 @@ document.getElementById("defeat").style.display="flex"
 
 function confetti(){
 
-for(let i=0;i<90;i++){
+for(let i=0;i<150;i++){
 
 let conf=document.createElement("div")
 
