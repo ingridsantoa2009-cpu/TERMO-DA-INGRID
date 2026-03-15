@@ -1,76 +1,42 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Meu Termo</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:#121213;
 color:white;
-text-align:center;
-}
-
-/* START SCREEN */
-
-#startScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
 display:flex;
 flex-direction:column;
-justify-content:center;
 align-items:center;
-background:#121213;
-z-index:20;
+justify-content:center;
+height:100vh;
 }
 
-#startScreen h1{
-font-size:38px;
-margin-bottom:30px;
+h1{
+margin-bottom:10px;
 }
-
-.startBtn{
-background:white;
-color:black;
-font-size:24px;
-padding:15px 40px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;
-}
-
-/* TIMER */
 
 #timer{
-font-size:26px;
-margin-top:10px;
+font-size:22px;
+margin-bottom:10px;
 }
-
-/* BOARD */
 
 #board{
 display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:6px;
-width:90vw;
-max-width:350px;
-margin:25px auto;
+grid-template-columns:repeat(5,60px);
+grid-gap:8px;
+margin-bottom:20px;
 }
 
 .tile{
-width:100%;
-aspect-ratio:1;
+width:60px;
+height:60px;
 border:2px solid #3a3a3c;
 display:flex;
 align-items:center;
@@ -95,50 +61,55 @@ background:#3a3a3c;
 border:none;
 }
 
-.loseTile{
-background:red !important;
-border:none;
-}
-
-/* KEYBOARD */
-
 #keyboard{
-width:95vw;
+display:grid;
+grid-template-columns:repeat(10,1fr);
+grid-gap:6px;
 max-width:500px;
-margin:auto;
-}
-
-.keyrow{
-display:flex;
-justify-content:center;
-margin-bottom:6px;
 }
 
 .key{
-flex:1;
-margin:2px;
-padding:12px;
-font-size:16px;
-font-weight:bold;
+padding:10px;
 background:#818384;
-color:white;
 border:none;
-border-radius:4px;
+color:white;
+font-weight:bold;
 cursor:pointer;
 }
 
-.key.enter,.key.delete{
-background:#6aaa64;
-flex:1.5;
+#startScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#121213;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:20px;
 }
 
-.key.wrong{
-background:red;
+.instructions{
+max-width:420px;
+margin:20px;
+font-size:18px;
+line-height:1.6;
 }
 
-/* WIN / LOSE */
+.startBtn{
+background:white;
+color:#f1c40f;
+border:3px solid black;
+font-size:24px;
+padding:15px 30px;
+cursor:pointer;
+font-weight:bold;
+}
 
-#victoryScreen,#loseScreen{
+.overlay{
 position:fixed;
 top:0;
 left:0;
@@ -146,194 +117,175 @@ width:100%;
 height:100%;
 background:rgba(0,0,0,0.9);
 display:none;
-justify-content:center;
+flex-direction:column;
 align-items:center;
-z-index:10;
-}
-
-.victoryBox{
+justify-content:center;
 text-align:center;
-padding:20px;
 }
 
-.victoryTitle{
-font-size:60px;
-color:#6aaa64;
-}
-
-.loseTitle{
-font-size:60px;
-color:red;
+.overlay h1{
+font-size:50px;
 }
 
 .retry{
-background:#6aaa64;
-border:none;
-color:white;
-font-size:22px;
-padding:15px 35px;
-border-radius:10px;
+padding:15px 25px;
+font-size:20px;
+margin-top:20px;
 cursor:pointer;
 }
 
-#confetti{
-position:fixed;
-top:0;
-left:0;
-pointer-events:none;
+@media(max-width:600px){
+
+#board{
+grid-template-columns:repeat(5,50px);
+}
+
+.tile{
+width:50px;
+height:50px;
+font-size:24px;
+}
+
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div id="startScreen">
+
 <h1>Está preparada para o desafio?</h1>
+
+<p class="instructions">
+Esse termo é de alguém especial para alguém especial e ele agora tem tempo!<br><br>
+Você terá <b>2 minutos</b> para acertar a palavra.<br>
+Boa sorte!
+</p>
+
 <button class="startBtn" onclick="startGame()">START</button>
+
 </div>
 
 <h1>Meu Termo</h1>
-
 <div id="timer">02:00</div>
 
 <div id="board"></div>
 
-<div id="keyboard">
+<div id="keyboard"></div>
 
-<div class="keyrow">
-<button class="key" onclick="press('Q')" id="keyQ">Q</button>
-<button class="key" onclick="press('W')" id="keyW">W</button>
-<button class="key" onclick="press('E')" id="keyE">E</button>
-<button class="key" onclick="press('R')" id="keyR">R</button>
-<button class="key" onclick="press('T')" id="keyT">T</button>
-<button class="key" onclick="press('Y')" id="keyY">Y</button>
-<button class="key" onclick="press('U')" id="keyU">U</button>
-<button class="key" onclick="press('I')" id="keyI">I</button>
-<button class="key" onclick="press('O')" id="keyO">O</button>
-<button class="key" onclick="press('P')" id="keyP">P</button>
+<div id="victory" class="overlay">
+<h1>VOCÊ GANHOU 🎉</h1>
+<button class="retry" onclick="location.reload()">Tentar novamente</button>
 </div>
 
-<div class="keyrow">
-<button class="key" onclick="press('A')" id="keyA">A</button>
-<button class="key" onclick="press('S')" id="keyS">S</button>
-<button class="key" onclick="press('D')" id="keyD">D</button>
-<button class="key" onclick="press('F')" id="keyF">F</button>
-<button class="key" onclick="press('G')" id="keyG">G</button>
-<button class="key" onclick="press('H')" id="keyH">H</button>
-<button class="key" onclick="press('J')" id="keyJ">J</button>
-<button class="key" onclick="press('K')" id="keyK">K</button>
-<button class="key" onclick="press('L')" id="keyL">L</button>
+<div id="defeat" class="overlay">
+<h1>VOCÊ PERDEU</h1>
+<p>A palavra era: <span id="loseWord"></span></p>
+<button class="retry" onclick="location.reload()">Tentar novamente</button>
 </div>
-
-<div class="keyrow">
-<button class="key enter" onclick="check()">ENTER</button>
-<button class="key" onclick="press('Z')" id="keyZ">Z</button>
-<button class="key" onclick="press('X')" id="keyX">X</button>
-<button class="key" onclick="press('C')" id="keyC">C</button>
-<button class="key" onclick="press('V')" id="keyV">V</button>
-<button class="key" onclick="press('B')" id="keyB">B</button>
-<button class="key" onclick="press('N')" id="keyN">N</button>
-<button class="key" onclick="press('M')" id="keyM">M</button>
-<button class="key delete" onclick="del()">⌫</button>
-</div>
-
-</div>
-
-<div id="victoryScreen">
-<div class="victoryBox">
-<h1 class="victoryTitle">🎉 VOCÊ GANHOU 🎉</h1>
-<button onclick="restart()" class="retry">Jogar novamente</button>
-</div>
-</div>
-
-<div id="loseScreen">
-<div class="victoryBox">
-<h1 class="loseTitle">❌ VOCÊ PERDEU ❌</h1>
-<p>A palavra era: <span id="correctWord"></span></p>
-<button onclick="restart()" class="retry">Tentar novamente</button>
-</div>
-</div>
-
-<canvas id="confetti"></canvas>
 
 <script>
 
-let palavra="AMORZ"
+let palavra="AMOR".toUpperCase()
 
-let tentativaAtual=0
-let tentativa=""
-let maxTentativas=6
+let board=document.getElementById("board")
+let keyboard=document.getElementById("keyboard")
+
+let grid=[]
+let currentRow=0
+let currentCol=0
 
 let tempo=120
 let timerInterval
 
-const board=document.getElementById("board")
-
-for(let i=0;i<30;i++){
-let tile=document.createElement("div")
-tile.classList.add("tile")
-board.appendChild(tile)
-}
-
 function startGame(){
+
 document.getElementById("startScreen").style.display="none"
-startTimer()
+
+timerInterval=setInterval(updateTimer,1000)
+
 }
 
-function startTimer(){
-
-timerInterval=setInterval(function(){
+function updateTimer(){
 
 tempo--
 
-let minutos=Math.floor(tempo/60)
-let segundos=tempo%60
+let min=Math.floor(tempo/60)
+let sec=tempo%60
 
-if(segundos<10) segundos="0"+segundos
+if(sec<10) sec="0"+sec
 
-document.getElementById("timer").innerText=minutos+":"+segundos
+document.getElementById("timer").innerText=min+":"+sec
 
 if(tempo<=0){
 clearInterval(timerInterval)
-gameOverTime()
-}
-
-},1000)
-
-}
-
-function gameOverTime(){
-
-document.getElementById("correctWord").textContent=palavra
-document.getElementById("loseScreen").style.display="flex"
-
-}
-
-function press(letra){
-
-if(tentativa.length<5){
-tentativa+=letra
-updateBoard()
+loseGame()
 }
 
 }
 
-function del(){
+for(let r=0;r<6;r++){
 
-tentativa=tentativa.slice(0,-1)
-updateBoard()
+let row=[]
+
+for(let c=0;c<5;c++){
+
+let tile=document.createElement("div")
+tile.className="tile"
+
+board.appendChild(tile)
+row.push(tile)
 
 }
 
-function updateBoard(){
+grid.push(row)
 
-for(let i=0;i<5;i++){
+}
 
-let tile=board.children[tentativaAtual*5+i]
+let letters="QWERTYUIOPASDFGHJKLZXCVBNM"
 
-tile.textContent=tentativa[i]||""
+for(let l of letters){
+
+let key=document.createElement("button")
+key.textContent=l
+key.className="key"
+
+key.onclick=()=>pressKey(l)
+
+keyboard.appendChild(key)
+
+}
+
+let enter=document.createElement("button")
+enter.textContent="ENTER"
+enter.className="key"
+enter.onclick=check
+keyboard.appendChild(enter)
+
+let del=document.createElement("button")
+del.textContent="DEL"
+del.className="key"
+del.onclick=delLetter
+keyboard.appendChild(del)
+
+function pressKey(letter){
+
+if(currentCol<5){
+
+grid[currentRow][currentCol].textContent=letter
+currentCol++
+
+}
+
+}
+
+function delLetter(){
+
+if(currentCol>0){
+
+currentCol--
+grid[currentRow][currentCol].textContent=""
 
 }
 
@@ -341,98 +293,106 @@ tile.textContent=tentativa[i]||""
 
 function check(){
 
-if(tentativa.length!=5) return
+if(currentCol<5) return
+
+let tentativa=""
+
+for(let i=0;i<5;i++){
+tentativa+=grid[currentRow][i].textContent
+}
 
 for(let i=0;i<5;i++){
 
-let tile=board.children[tentativaAtual*5+i]
+let tile=grid[currentRow][i]
 
-if(tentativa[i]==palavra[i]){
+if(tentativa[i]===palavra[i]){
+
 tile.classList.add("correct")
-}
 
-else if(palavra.includes(tentativa[i])){
+}else if(palavra.includes(tentativa[i])){
+
 tile.classList.add("present")
-}
 
-else{
+}else{
+
 tile.classList.add("absent")
-document.getElementById("key"+tentativa[i]).classList.add("wrong")
-}
 
 }
 
-if(tentativa==palavra){
+}
+
+if(tentativa===palavra){
 
 clearInterval(timerInterval)
 
-document.getElementById("victoryScreen").style.display="flex"
-startConfetti()
+document.getElementById("victory").style.display="flex"
+
+setTimeout(()=>{
+let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_8f1c9d9f9f.mp3")
+audio.play()
+},200)
+
+confetti()
+
 return
 }
 
-tentativaAtual++
-tentativa=""
+currentRow++
+currentCol=0
 
-if(tentativaAtual==maxTentativas){
+if(currentRow===6){
 
 clearInterval(timerInterval)
 
 for(let i=0;i<5;i++){
-let tile=board.children[(tentativaAtual-1)*5+i]
-tile.classList.add("loseTile")
+grid[5][i].style.background="#ff4d4d"
 }
 
-document.getElementById("correctWord").textContent=palavra
-document.getElementById("loseScreen").style.display="flex"
-
-}
+loseGame()
 
 }
 
-function restart(){
-location.reload()
 }
 
-/* CONFETTI */
+function loseGame(){
 
-const canvas=document.getElementById("confetti")
-const ctx=canvas.getContext("2d")
+document.getElementById("loseWord").innerText=palavra
+document.getElementById("defeat").style.display="flex"
 
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
+}
 
-let pieces=[]
+function confetti(){
 
 for(let i=0;i<120;i++){
-pieces.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-size:Math.random()*6+4,
-speed:Math.random()*3+2
-})
+
+let conf=document.createElement("div")
+
+conf.style.position="fixed"
+conf.style.width="10px"
+conf.style.height="10px"
+conf.style.background="hsl("+Math.random()*360+"deg,100%,50%)"
+conf.style.top="-10px"
+conf.style.left=Math.random()*100+"%"
+conf.style.opacity="0.9"
+
+document.body.appendChild(conf)
+
+let fall=setInterval(()=>{
+
+let top=parseFloat(conf.style.top)
+
+conf.style.top=top+5+"px"
+
+if(top>window.innerHeight){
+
+clearInterval(fall)
+conf.remove()
+
 }
 
-function startConfetti(){
+},30)
 
-setInterval(()=>{
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-pieces.forEach(p=>{
-
-ctx.fillStyle="#6aaa64"
-ctx.fillRect(p.x,p.y,p.size,p.size)
-
-p.y+=p.speed
-
-if(p.y>canvas.height){
-p.y=0
 }
-
-})
-
-},20)
 
 }
 
