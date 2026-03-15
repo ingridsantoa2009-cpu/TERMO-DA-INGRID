@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Meu Termo</title>
+<title>TERMO DA INGRID</title>
 
 <style>
 
@@ -170,11 +170,11 @@ font-size:14px;
 
 <div id="startScreen">
 
-<h1>Está preparada para o desafio?</h1>
+<h1>Está preparado para o desafio?</h1>
 
 <p class="instructions">
 Esse termo é de alguém especial para alguém especial e ele agora tem tempo!<br><br>
-Você terá <b>2 minutos</b> para acertar a palavra.<br>
+Você terá <b>1 minuto e 30 segundos</b> para acertar a palavra.<br>
 Boa sorte!
 </p>
 
@@ -182,8 +182,8 @@ Boa sorte!
 
 </div>
 
-<h1>Meu Termo</h1>
-<div id="timer">02:00</div>
+<h1>TERMO DA INGRID</h1>
+<div id="timer">01:30</div>
 
 <div id="board"></div>
 
@@ -201,14 +201,14 @@ Boa sorte!
 </div>
 
 <div id="defeat" class="overlay">
-<h1>VOCÊ PERDEU</h1>
+<h1>VOCÊ PERDEU ❌</h1>
 <p>A palavra era: <span id="loseWord"></span></p>
 <button class="retry" onclick="location.reload()">Tentar novamente</button>
 </div>
 
 <script>
 
-let palavra="AMOR".toUpperCase()
+let palavra="TESTE".toUpperCase()
 
 let board=document.getElementById("board")
 
@@ -404,7 +404,7 @@ document.getElementById("defeat").style.display="flex"
 
 function confetti(){
 
-for(let i=0;i<120;i++){
+for(let i=0;i<90;i++){
 
 let conf=document.createElement("div")
 
