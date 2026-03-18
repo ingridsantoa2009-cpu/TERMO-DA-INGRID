@@ -1,441 +1,276 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>TERMO DA INGRID</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caça-Palavras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #b9f6ca;
+      margin: 0;
+      padding: 10px;
+      color: #003300;
+    }
 
-<style>
+    h1 {
+      margin-bottom: 10px;
+      color: #004d00;
+      font-size: clamp(18px, 4vw, 26px);
+    }
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#121213;
-color:white;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-height:100vh;
-}
+    #word-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
 
-h1{
-margin-bottom:10px;
-}
+    .word {
+      padding: 4px 8px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: clamp(10px, 2.5vw, 14px);
+      color: #003300;
+    }
 
-#timer{
-font-size:22px;
-margin-bottom:15px;
-}
+    .found {
+      text-decoration: line-through;
+      background: #00ff88;
+      color: #000;
+    }
 
-#board{
-display:grid;
-grid-template-columns:repeat(5,60px);
-grid-gap:8px;
-margin-bottom:25px;
-}
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 1px;
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
+      touch-action: none;
+    }
 
-.tile{
-width:60px;
-height:60px;
-border:2px solid #3a3a3c;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-font-weight:bold;
-text-transform:uppercase;
-}
+    .cell {
+      background: rgba(255,255,255,0.9);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: clamp(9px, 2vw, 14px);
+      border-radius: 4px;
+      user-select: none;
+      color: #000;
+    }
 
-.correct{
-background:#6aaa64;
-border:none;
-}
+    .selected {
+      background: #ffdf00;
+      color: #000;
+    }
 
-.present{
-background:#c9b458;
-border:none;
-}
+    .correct {
+      background: #00ff88;
+      color: #000;
+    }
 
-.absent{
-background:#3a3a3c;
-border:none;
-}
+    /* 📱 MOBILE AJUSTADO PERFEITO */
+    @media (max-width: 600px) {
+      #grid {
+        max-width: 100vw;
+      }
 
-#keyboard{
-display:flex;
-flex-direction:column;
-gap:8px;
-}
+      .cell {
+        font-size: clamp(8px, 2.8vw, 12px);
+      }
+    }
+  
 
-.row{
-display:flex;
-justify-content:center;
-gap:6px;
-}
+    /* 🎉 TELA DE VITÓRIA */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
 
-.key{
-padding:12px 14px;
-background:#818384;
-border:none;
-color:white;
-font-weight:bold;
-cursor:pointer;
-border-radius:4px;
-}
+    .overlay h1 {
+      color: white;
+      font-size: clamp(24px, 5vw, 40px);
+      margin-bottom: 20px;
+    }
 
-.key.big{
-background:#6aaa64;
-}
+    .retry {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #00ff88;
+      color: #003300;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-#startScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#121213;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:20px;
-}
+    .retry:hover {
+      background: #00cc6a;
+    }
 
-.instructions{
-max-width:420px;
-margin:20px;
-font-size:18px;
-line-height:1.6;
-}
-
-.startBtn{
-background:white;
-color:#f1c40f;
-border:3px solid black;
-font-size:24px;
-padding:15px 30px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#121213;
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-z-index:1000;
-}
-
-.overlay h1{
-font-size:60px;
-margin-bottom:20px;
-}
-
-.retry{
-padding:18px 28px;
-font-size:22px;
-cursor:pointer;
-background:#6aaa64;
-border:none;
-color:white;
-font-weight:bold;
-border-radius:6px;
-}
-
-@media(max-width:600px){
-
-#board{
-grid-template-columns:repeat(5,50px);
-}
-
-.tile{
-width:50px;
-height:50px;
-font-size:24px;
-}
-
-.key{
-padding:10px;
-font-size:14px;
-}
-
-}
-
-</style>
+  </style>
 </head>
-
 <body>
 
-<div id="startScreen">
-
-<h1>Está preparada para o desafio?</h1>
-
-<p class="instructions">
-Esse termo é de alguém especial para alguém especial e ele agora tem tempo!<br><br>
-Você terá <b>1 minuto e 30 segundos</b> para acertar a palavra.<br>
-Boa sorte!
-</p>
-
-<button class="startBtn" onclick="startGame()">START</button>
-
-</div>
-
-<h1>TERMO DA INGRID</h1>
-<div id="timer">01:30</div>
-
-<div id="board"></div>
-
-<div id="keyboard">
-
-<div class="row" id="row1"></div>
-<div class="row" id="row2"></div>
-<div class="row" id="row3"></div>
-
-</div>
-
-<div id="victory" class="overlay">
-<h1>🎉 VOCÊ GANHOU 🎉</h1>
-<button class="retry" onclick="location.reload()">Tentar novamente</button>
-</div>
-
-<div id="defeat" class="overlay">
-<h1>❌ VOCÊ PERDEU ❌</h1>
-<p style="font-size:24px;">A palavra era: <b><span id="loseWord"></span></b></p>
-<button class="retry" onclick="location.reload()">Tentar novamente</button>
-</div>
+<h1>Caça-Palavras</h1>
+<div id="word-list"></div>
+<div id="grid"></div>
 
 <script>
+const words = [
+  "TETEO","CHATO","BOBAO","AMIGO","LEGAL",
+  "JOGO","RAP","MC","BIXINHO","COMIDA"
+];
 
-let palavra="cacho".toUpperCase()
+const rows = 12;
+const cols = 16;
+const grid = Array.from({ length: rows }, () => Array(cols).fill(""));
 
-let board=document.getElementById("board")
-
-let grid=[]
-let currentRow=0
-let currentCol=0
-
-let tempo=90
-let timerInterval
-let timerStarted=false
-
-function startGame(){
-document.getElementById("startScreen").style.display="none"
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
 }
 
-function startTimer(){
-timerInterval=setInterval(updateTimer,1000)
+shuffleArray(words);
+
+function placeWord(word) {
+  let placed = false;
+  while (!placed) {
+    let row = Math.floor(Math.random() * rows);
+    let col = Math.floor(Math.random() * cols);
+    let dir = Math.floor(Math.random() * 2);
+
+    if (dir === 0 && col + word.length <= cols) {
+      let canPlace = true;
+      for (let i = 0; i < word.length; i++) {
+        if (grid[row][col+i] && grid[row][col+i] !== word[i]) {
+          canPlace = false;
+          break;
+        }
+      }
+      if (canPlace) {
+        for (let i = 0; i < word.length; i++) grid[row][col+i] = word[i];
+        placed = true;
+      }
+    }
+
+    if (dir === 1 && row + word.length <= rows) {
+      let canPlace = true;
+      for (let i = 0; i < word.length; i++) {
+        if (grid[row+i][col] && grid[row+i][col] !== word[i]) {
+          canPlace = false;
+          break;
+        }
+      }
+      if (canPlace) {
+        for (let i = 0; i < word.length; i++) grid[row+i][col] = word[i];
+        placed = true;
+      }
+    }
+  }
 }
 
-function updateTimer(){
+words.forEach(placeWord);
 
-tempo--
-
-let min=Math.floor(tempo/60)
-let sec=tempo%60
-
-if(sec<10) sec="0"+sec
-
-document.getElementById("timer").innerText=min+":"+sec
-
-if(tempo<=0){
-clearInterval(timerInterval)
-loseGame()
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) {
+    if (!grid[r][c]) {
+      grid[r][c] = letters[Math.floor(Math.random() * letters.length)];
+    }
+  }
 }
 
+const gridEl = document.getElementById("grid");
+const wordListEl = document.getElementById("word-list");
+
+words.forEach(w => {
+  const el = document.createElement("div");
+  el.className = "word";
+  el.innerText = w;
+  wordListEl.appendChild(el);
+});
+
+let selected = [];
+let isDragging = false;
+
+function getWordFromSelection() {
+  return selected.map(c => c.innerText).join("");
 }
 
-for(let r=0;r<5;r++){
-
-let row=[]
-
-for(let c=0;c<5;c++){
-
-let tile=document.createElement("div")
-tile.className="tile"
-
-board.appendChild(tile)
-row.push(tile)
-
+function clearSelection() {
+  selected.forEach(c => c.classList.remove("selected"));
+  selected = [];
 }
 
-grid.push(row)
-
+function checkWord() {
+  const formed = getWordFromSelection();
+  if (words.includes(formed)) {
+    selected.forEach(c => c.classList.add("correct"));
+    document.querySelectorAll(".word").forEach(w => {
+      if (w.innerText === formed) w.classList.add("found");
+    });
+  }
 }
 
-function createKey(letter,row){
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerText = grid[r][c];
 
-let key=document.createElement("button")
-key.textContent=letter
-key.className="key"
+    cell.addEventListener("pointerdown", () => {
+      clearSelection();
+      isDragging = true;
+      selected.push(cell);
+      cell.classList.add("selected");
+    });
 
-key.onclick=()=>pressKey(letter)
+    cell.addEventListener("pointerenter", () => {
+      if (isDragging && !selected.includes(cell)) {
+        selected.push(cell);
+        cell.classList.add("selected");
+      }
+    });
 
-document.getElementById(row).appendChild(key)
+    cell.addEventListener("pointerup", () => {
+      isDragging = false;
+      checkWord();
+      clearSelection();
+    });
 
+    gridEl.appendChild(cell);
+  }
 }
 
-function createBigKey(text,row,func){
-
-let key=document.createElement("button")
-key.textContent=text
-key.className="key big"
-
-key.onclick=func
-
-document.getElementById(row).appendChild(key)
-
-}
-
-let row1="QWERTYUIOP"
-let row2="ASDFGHJKL"
-let row3="ZXCVBNM"
-
-for(let l of row1) createKey(l,"row1")
-for(let l of row2) createKey(l,"row2")
-
-createBigKey("ENTER","row3",check)
-
-for(let l of row3) createKey(l,"row3")
-
-createBigKey("DEL","row3",delLetter)
-
-function pressKey(letter){
-
-if(currentCol<5){
-
-if(!timerStarted){
-startTimer()
-timerStarted=true
-}
-
-grid[currentRow][currentCol].textContent=letter
-currentCol++
-
-}
-
-}
-
-function delLetter(){
-
-if(currentCol>0){
-
-currentCol--
-grid[currentRow][currentCol].textContent=""
-
-}
-
-}
-
-function check(){
-
-if(currentCol<5) return
-
-let tentativa=""
-
-for(let i=0;i<5;i++){
-tentativa+=grid[currentRow][i].textContent
-}
-
-for(let i=0;i<5;i++){
-
-let tile=grid[currentRow][i]
-
-if(tentativa[i]===palavra[i]){
-tile.classList.add("correct")
-}
-else if(palavra.includes(tentativa[i])){
-tile.classList.add("present")
-}
-else{
-tile.classList.add("absent")
-}
-
-}
-
-if(tentativa===palavra){
-
-clearInterval(timerInterval)
-
-document.getElementById("victory").style.display="flex"
-
-confetti()
-
-setTimeout(()=>{
-let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_8f1c9d9f9f.mp3")
-audio.play()
-},200)
-
-return
-}
-
-currentRow++
-currentCol=0
-
-if(currentRow===5){
-
-clearInterval(timerInterval)
-
-for(let i=0;i<5;i++){
-grid[4][i].style.background="#ff4d4d"
-}
-
-loseGame()
-
-}
-
-}
-
-function loseGame(){
-
-document.getElementById("loseWord").innerText=palavra
-document.getElementById("defeat").style.display="flex"
-
-}
-
-function confetti(){
-
-for(let i=0;i<150;i++){
-
-let conf=document.createElement("div")
-
-conf.style.position="fixed"
-conf.style.width="10px"
-conf.style.height="10px"
-conf.style.background="hsl("+Math.random()*360+"deg,100%,50%)"
-conf.style.top="-10px"
-conf.style.left=Math.random()*100+"%"
-conf.style.opacity="0.9"
-
-document.body.appendChild(conf)
-
-let fall=setInterval(()=>{
-
-let top=parseFloat(conf.style.top)
-
-conf.style.top=top+5+"px"
-
-if(top>window.innerHeight){
-
-clearInterval(fall)
-conf.remove()
-
-}
-
-},30)
-
-}
-
-}
-
+window.addEventListener("pointerup", () => {
+  isDragging = false;
+});
 </script>
+
+<div id="victory" class="overlay">
+  <h1>🎉 VOCÊ GANHOU 🎉</h1>
+  <button class="retry" onclick="location.reload()">Tentar novamente</button>
+</div>
+</div>
 
 </body>
 </html>
